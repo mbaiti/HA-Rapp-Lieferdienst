@@ -1,6 +1,7 @@
 """Sensor platform for Rapp Lieferdienst."""
 from __future__ import annotations
 
+import logging  # Hinzugefügt für die Diagnose
 from datetime import date, datetime
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
@@ -12,6 +13,9 @@ from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN
 from .coordinator import RappDataUpdateCoordinator
+
+# Hinzugefügt für die Diagnose
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
@@ -37,7 +41,10 @@ class RappNextDeliverySensor(
     ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator)
-        self._attr_name = "Nächster Rapp Liefertermin"
+        
+        # DIAGNOSE-SCHRITT 1: Sichtbare Namensänderung
+        self._attr_name = "Nächster Rapp Liefertermin (Test)"
+        
         self._attr_unique_id = f"{entry.data['customer_id']}-next_delivery"
 
     @property
@@ -58,5 +65,19 @@ class RappNextDeliverySensor(
                 next_event_date = future_events[0]
 
         if next_event_date:
-            return datetime.combine(next_event_date, datetime.min.time())
+            naive_dt = datetime.combine(next_event_date, datetime.min.time())
+            # Die korrekte Umwandlung
+            aware_dt = dt_util.as_local(naive_dt)
+            
+            # DIAGNOSE-SCHRITT 2: Explizites Logging vor der Rückgabe
+            _LOGGER.error(
+                "DIAGNOSE-TEST: Gebe Zeitstempel '%s' mit Zeitzone '%s' zurück.",
+                aware_dt,
+                aware_dt.tzinfo,
+            )
+            
+            return aware_dt
+
+        _LOGGER.error("DIAGNOSE-TEST: Kein zukünftiges Datum gefunden, gebe None zurück.")
         return None
+

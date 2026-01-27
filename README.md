@@ -81,6 +81,6 @@ entities:
   - entity: sensor.nachster_rapp_liefertermin
     name: Nächste Rapp-Lieferung
     format: date
-
-Haftungsausschluss: Dies ist eine inoffizielle Integration und steht in keiner Verbindung mit der Brauerei Rapp GmbH & Co. KG. Sie wird von der Community entwickelt und gewartet.
-
+```
+## Haftungsausschluss
+Dies ist eine inoffizielle Integration und steht in keiner Verbindung mit der Brauerei Rapp GmbH & Co. KG. Sie wird von der Community entwickelt und gewartet.

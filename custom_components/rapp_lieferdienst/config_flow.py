@@ -32,7 +32,6 @@ class RappLieferdienstConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             api_client = RappApiClient(customer_id, session)
 
             try:
-                # Test the connection
                 await api_client.async_get_events()
             except RappApiError:
                 errors["base"] = "cannot_connect"
@@ -62,9 +61,9 @@ class RappLieferdienstConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 class OptionsFlowHandler(config_entries.OptionsFlow):
     """Handle an options flow."""
 
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        """Initialize options flow."""
-        self.config_entry = config_entry
+    # FEHLERHAFTE __init__ METHODE WURDE ENTFERNT
+    # Die `self.config_entry` wird von der Basisklasse bereitgestellt
+    # und darf hier nicht überschrieben werden.
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
@@ -72,7 +71,6 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         """Manage the options."""
         errors: dict[str, str] = {}
         if user_input is not None:
-            # Here we would re-validate the new customer_id if needed
             session = async_get_clientsession(self.hass)
             api_client = RappApiClient(user_input[CONF_CUSTOMER_ID], session)
             try:
@@ -82,10 +80,10 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             except Exception:  # pylint: disable=broad-except
                 errors["base"] = "unknown"
             else:
-                # This will create a new entry, and the old one will be cleaned up.
                 self.hass.config_entries.async_update_entry(
                     self.config_entry, data=user_input
                 )
+                # Nach dem Update den Flow beenden
                 return self.async_create_entry(title="", data={})
 
         return self.async_show_form(

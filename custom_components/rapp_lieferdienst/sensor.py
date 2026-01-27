@@ -49,9 +49,9 @@ class RappNextDeliverySensor(
         if self.coordinator.data:
             future_events = sorted(
                 [
-                    event.begin.date()
+                    event.start
                     for event in self.coordinator.data
-                    if event.begin.date() >= today
+                    if event.start >= today
                 ]
             )
             if future_events:

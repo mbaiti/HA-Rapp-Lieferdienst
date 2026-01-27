@@ -38,6 +38,8 @@ class RappCalendarEntity(CoordinatorEntity[RappDataUpdateCoordinator], CalendarE
     @property
     def event(self) -> CalendarEvent | None:
         """Return the next upcoming event."""
+        # This property is not strictly needed for this implementation,
+        # as async_get_events handles all event fetching.
         return self._event
 
     async def async_get_events(
@@ -47,13 +49,12 @@ class RappCalendarEntity(CoordinatorEntity[RappDataUpdateCoordinator], CalendarE
         events = []
         if self.coordinator.data:
             for event in self.coordinator.data:
-                event_start = event.begin.date()
-                if start_date.date() <= event_start < end_date.date():
+                if start_date.date() <= event.start < end_date.date():
                     events.append(
                         CalendarEvent(
-                            summary=event.name,
-                            start=event_start,
-                            end=event_start + timedelta(days=1),
+                            summary=event.summary,
+                            start=event.start,
+                            end=event.start + timedelta(days=1),
                             description=event.description,
                             uid=event.uid,
                         )

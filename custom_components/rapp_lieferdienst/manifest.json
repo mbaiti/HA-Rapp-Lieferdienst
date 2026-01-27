@@ -1,11 +1,11 @@
 {
   "domain": "rapp_lieferdienst",
   "name": "Rapp Lieferdienst",
-  "documentation": "https://github.com/mbaiti/ha-rapp-lieferdienst",
-  "issue_tracker": "https://github.com/mbaiti/ha-rapp-lieferdienst/issues",
-  "codeowners": ["@mbaiti"],
+  "documentation": "https://github.com/your-github-username/ha-rapp-lieferdienst",
+  "issue_tracker": "https://github.com/your-github-username/ha-rapp-lieferdienst/issues",
+  "codeowners": ["@your-github-username"],
   "config_flow": true,
   "iot_class": "cloud_polling",
   "version": "1.0.0",
-  "requirements": ["ics==0.7", "tatsu==4.4.0"]
+  "requirements": ["icalendar>=5.0"]
 }

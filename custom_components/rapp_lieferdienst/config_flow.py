@@ -54,7 +54,7 @@ class RappLieferdienstConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(
         config_entry: config_entries.ConfigEntry,
-    ) -> OptionsFlowHandler:
+    ) -> "OptionsFlowHandler":
         """Get the options flow for this handler."""
         return OptionsFlowHandler(config_entry)
 

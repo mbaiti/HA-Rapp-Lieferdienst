@@ -2,17 +2,15 @@
 import logging
 from datetime import timedelta
 
-from ics import Event
-
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import RappApiClient, RappApiError
+from .api import RappApiClient, RappApiError, RappEvent
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class RappDataUpdateCoordinator(DataUpdateCoordinator[list[Event]]):
+class RappDataUpdateCoordinator(DataUpdateCoordinator[list[RappEvent]]):
     """A coordinator to fetch data from the Rapp API."""
 
     def __init__(
@@ -30,7 +28,7 @@ class RappDataUpdateCoordinator(DataUpdateCoordinator[list[Event]]):
             update_interval=update_interval,
         )
 
-    async def _async_update_data(self) -> list[Event]:
+    async def _async_update_data(self) -> list[RappEvent]:
         """Fetch data from the API."""
         try:
             return await self.api_client.async_get_events()

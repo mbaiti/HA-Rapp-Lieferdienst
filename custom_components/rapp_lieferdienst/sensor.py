@@ -1,7 +1,7 @@
 """Sensor platform for Rapp Lieferdienst."""
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import date
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
@@ -29,7 +29,7 @@ class RappNextDeliverySensor(
 ):
     """Representation of a sensor for the next Rapp delivery date."""
 
-    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_device_class = SensorDeviceClass.DATE
     _attr_has_entity_name = True
 
     def __init__(
@@ -41,25 +41,17 @@ class RappNextDeliverySensor(
         self._attr_unique_id = f"{entry.data['customer_id']}-next_delivery"
 
     @property
-    def native_value(self) -> datetime | None:
-        """Return the state of the sensor."""
+    def native_value(self) -> date | None:
+        """Return the next delivery date."""
         today = dt_util.now().date()
-        next_event_date: date | None = None
 
-        if self.coordinator.data:
-            future_events = sorted(
-                [
-                    event.start
-                    for event in self.coordinator.data
-                    if event.start >= today
-                ]
-            )
-            if future_events:
-                next_event_date = future_events[0]
+        if not self.coordinator.data:
+            return None
 
-        if next_event_date:
-            naive_dt = datetime.combine(next_event_date, datetime.min.time())
-            aware_dt = dt_util.as_local(naive_dt)
-            return aware_dt
+        future_events = sorted(
+            event.start
+            for event in self.coordinator.data
+            if event.start >= today
+        )
 
-        return None
+        return future_events[0] if future_events else None

@@ -1,50 +1,28 @@
 """The Rapp Lieferdienst integration."""
 from __future__ import annotations
 
-import logging
-from datetime import timedelta
-
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .api import RappApiClient
-from .const import CONF_CUSTOMER_ID, DOMAIN, PLATFORMS
-from .coordinator import RappDataUpdateCoordinator
-
-_LOGGER = logging.getLogger(__name__)
+from .const import PLATFORMS
+from .coordinator import RappConfigEntry, RappDataUpdateCoordinator
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_setup_entry(hass: HomeAssistant, entry: RappConfigEntry) -> bool:
     """Set up Rapp Lieferdienst from a config entry."""
-    session = async_get_clientsession(hass)
-    api_client = RappApiClient(entry.data[CONF_CUSTOMER_ID], session)
-
-    coordinator = RappDataUpdateCoordinator(
-        hass,
-        api_client,
-        update_interval=timedelta(hours=24),
-    )
-
+    coordinator = RappDataUpdateCoordinator(hass, entry)
     await coordinator.async_config_entry_first_refresh()
-
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
+    entry.runtime_data = coordinator
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-
-    entry.async_on_unload(entry.add_update_listener(update_listener))
-
+    entry.async_on_unload(entry.add_update_listener(_async_update_listener))
     return True
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_unload_entry(hass: HomeAssistant, entry: RappConfigEntry) -> bool:
     """Unload a config entry."""
-    if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
-        hass.data[DOMAIN].pop(entry.entry_id)
-
-    return unload_ok
+    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
 
-async def update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Handle options update."""
+async def _async_update_listener(hass: HomeAssistant, entry: RappConfigEntry) -> None:
+    """Reload the entry after the customer number was changed."""
     await hass.config_entries.async_reload(entry.entry_id)

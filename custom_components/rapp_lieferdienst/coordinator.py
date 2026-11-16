@@ -1,36 +1,42 @@
 """DataUpdateCoordinator for the Rapp Lieferdienst integration."""
-import logging
-from datetime import timedelta
+from __future__ import annotations
 
+import logging
+
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import RappApiClient, RappApiError, RappEvent
+from .const import CONF_CUSTOMER_ID, DOMAIN, UPDATE_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
+
+type RappConfigEntry = ConfigEntry[RappDataUpdateCoordinator]
 
 
 class RappDataUpdateCoordinator(DataUpdateCoordinator[list[RappEvent]]):
     """A coordinator to fetch data from the Rapp API."""
 
-    def __init__(
-        self,
-        hass: HomeAssistant,
-        api_client: RappApiClient,
-        update_interval: timedelta,
-    ) -> None:
+    config_entry: RappConfigEntry
+
+    def __init__(self, hass: HomeAssistant, entry: RappConfigEntry) -> None:
         """Initialize the coordinator."""
-        self.api_client = api_client
+        self.api_client = RappApiClient(
+            entry.data[CONF_CUSTOMER_ID], async_get_clientsession(hass)
+        )
         super().__init__(
             hass,
             _LOGGER,
-            name="Rapp Lieferdienst Sensor",
-            update_interval=update_interval,
+            config_entry=entry,
+            name=DOMAIN,
+            update_interval=UPDATE_INTERVAL,
         )
 
     async def _async_update_data(self) -> list[RappEvent]:
         """Fetch data from the API."""
         try:
             return await self.api_client.async_get_events()
-        except RappApiError as e:
-            raise UpdateFailed(f"Error communicating with API: {e}") from e
+        except RappApiError as err:
+            raise UpdateFailed(str(err)) from err

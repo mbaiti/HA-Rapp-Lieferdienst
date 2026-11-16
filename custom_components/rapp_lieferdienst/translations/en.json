@@ -1,0 +1,49 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Rapp Lieferdienst",
+        "data": {
+          "customer_id": "Customer number"
+        },
+        "data_description": {
+          "customer_id": "Your Rapp customer number (e.g. printed on your invoice)."
+        }
+      },
+      "reconfigure": {
+        "title": "Change customer number",
+        "data": {
+          "customer_id": "Customer number"
+        },
+        "data_description": {
+          "customer_id": "Your Rapp customer number (e.g. printed on your invoice)."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not fetch the calendar. Please check the customer number.",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This customer number is already configured.",
+      "reconfigure_successful": "Customer number was changed."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Change customer number",
+        "data": {
+          "customer_id": "Customer number"
+        },
+        "data_description": {
+          "customer_id": "Your Rapp customer number (e.g. printed on your invoice)."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not fetch the calendar. Please check the customer number.",
+      "unknown": "Unexpected error"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Rapp Lieferdienst einrichten",
+        "data": {
+          "customer_id": "Kundennummer"
+        },
+        "data_description": {
+          "customer_id": "Ihre Rapp-Kundennummer (steht z. B. auf der Rechnung)."
+        }
+      },
+      "reconfigure": {
+        "title": "Kundennummer ändern",
+        "data": {
+          "customer_id": "Kundennummer"
+        },
+        "data_description": {
+          "customer_id": "Ihre Rapp-Kundennummer (steht z. B. auf der Rechnung)."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kalender konnte nicht abgerufen werden. Bitte Kundennummer prüfen.",
+      "unknown": "Unerwarteter Fehler"
+    },
+    "abort": {
+      "already_configured": "Diese Kundennummer ist bereits eingerichtet.",
+      "reconfigure_successful": "Kundennummer wurde geändert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Kundennummer ändern",
+        "data": {
+          "customer_id": "Kundennummer"
+        },
+        "data_description": {
+          "customer_id": "Ihre Rapp-Kundennummer (steht z. B. auf der Rechnung)."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kalender konnte nicht abgerufen werden. Bitte Kundennummer prüfen.",
+      "unknown": "Unerwarteter Fehler"
+    }
+  }
+}
